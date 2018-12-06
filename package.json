@@ -4,9 +4,8 @@
   "description": "webpack practice",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "fix": "eslint --fix --ext .js,.vue src",
-    "dev": "cross-env NODE_ENV=production webpack-dev-server --color --config webpack.conf.js"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --color --config build/webpack.dev.conf.js",
+    "build": "cross-env NODE_ENV=production webpack --progress --config build/webpack.prod.conf.js"
   },
   "repository": {
     "type": "git",
@@ -22,28 +21,53 @@
   },
   "homepage": "https://github.com/zBorwen/webpack-start#readme",
   "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/runtime": "^7.2.0",
+    "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^1.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
+    "cssnano": "^4.1.7",
     "eslint": "^5.9.0",
+    "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-html": "^5.0.0",
-    "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^3.0.1",
     "eslint-plugin-vue": "^4.0.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^2.0.0",
+    "glob-all": "^3.1.0",
+    "html-webpack-inline-chunk-plugin": "^1.1.1",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "postcss": "^7.0.6",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-loader": "^3.0.0",
+    "purify-css": "^1.2.5",
+    "purifycss-webpack": "^0.7.0",
     "style-loader": "^0.23.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "url-loader": "^1.1.2",
     "vue-loader": "^15.4.2",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1"
+    "webpack-dev-server": "^2.9.1",
+    "webpack-merge": "^4.1.4"
   },
   "dependencies": {
     "vue": "^2.5.17"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

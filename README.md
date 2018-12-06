@@ -1,4 +1,4 @@
-### webpack3.0 前端工程化
+### webpack-vue-practice
 
 1. webpack四要素entry，output，module，plugins
 2. 处理ES6，处理预处理语言css

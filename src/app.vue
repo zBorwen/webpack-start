@@ -1,21 +1,21 @@
 <template>
-    <div id="app">
-        {{msg}}
-    </div>
+  <div id="app">
+    {{msg}}
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      msg: 'hello webpack6'
+      msg: 'hello1'
     }
   }
 }
 </script>
 
 <style scoped>
-div{
-    color: red;
+#app{
+  color: red;
 }
 </style>
