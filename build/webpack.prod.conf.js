@@ -7,12 +7,11 @@ const Webpack = require('webpack')
 const merge = require('webpack-merge')
 const PurifyCSSPlugin = require('purifycss-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlInlineChunkPlugin = require('html-webpack-inline-chunk-plugin')
 
-module.exports = merge(baseWebpackConf, {
+const webpackProdConf = merge(baseWebpackConf, {
   // 生产环境切换为chunkhash
   output: {
     filename: 'static/js/[name].[chunkhash:8].js'
@@ -21,6 +20,8 @@ module.exports = merge(baseWebpackConf, {
     rules: utils.styleLoaders(process.env.NODE_ENV)
   },
   plugins: [
+    // 长缓存 保证相同文件进行缓存引入的模块 动态imoprt()使用magic chunkname解决
+    new Webpack.NamedChunksPlugin(),
     new ExtractTextPlugin({
       filename: 'static/css/app.min.css',
       allChunks: true
@@ -40,17 +41,7 @@ module.exports = merge(baseWebpackConf, {
         path.join(__dirname, '../src/*.js')
       ]),
     }),
-    // js tree-shaking
-    new Webpack.optimize.UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false
-        }
-      },
-      sourceMap: false,
-      // 并行处理 加速打包
-      parallel: true
-    }),
+    // js tree-shaking 选择是否需要sourceMap在插入
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
@@ -60,7 +51,8 @@ module.exports = merge(baseWebpackConf, {
         collapseWhitespace: true,
         removeAttributeQuotes: true
       },
-      chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency',
+      dllname: `dll/vendor.dll.js`
     }),
     // 引入的项目依赖
     new Webpack.optimize.CommonsChunkPlugin({
@@ -91,7 +83,8 @@ module.exports = merge(baseWebpackConf, {
       async: 'vendor-async',
       children: true,
       minChunks: 3
-    }),
-    new CleanWebpackPlugin(['../dist']),
+    })
   ]
 })
+
+module.exports = webpackProdConf
