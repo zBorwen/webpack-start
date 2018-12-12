@@ -24,5 +24,3 @@
     dll happy-pack 缓存 平行
 12. 打包分析
     webpack-bundle-analyzer
-
-手动搭建vue-project配置生产环境与开发环境使用webpack处理资源

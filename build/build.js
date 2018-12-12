@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const config = {
   // 开启打包分析
-  isAnalyzer: false,
+  isAnalyzer: process.env.npm_config_report,
   isSourceMap: false
 }
 
@@ -42,7 +42,7 @@ rm(path.resolve(__dirname, '../dist/static'), err => {
     process.stdout.write(state.toString({
       colors: true,
       modules: false,
-      children: false, // If you are using ts-loader, setting this to true will make TypeScript errors show up during build.
+      children: false,
       chunks: false,
       chunkModules: false
     }) + '\n\n')
