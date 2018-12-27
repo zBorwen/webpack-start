@@ -2,26 +2,44 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 exports.styleLoaders = function (env) {
   const loaders = [
-    'vue-style-loader',
+    // 这里匹配 `<style module>`
     {
-      loader: 'css-loader',
-      options: {
-        minimize: true,
-        // 开启css-modules
-        modules: true
-      }
+      resourceQuery: /module/,
+      use: [
+        'vue-style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            localIdentName: '[local]_[hash:base64:5]'
+          }
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss'
+          }
+        }
+      ]
     },
+    // 这里匹配普通的 `<style>` 或 `<style scoped>`
     {
-      loader: 'postcss-loader',
-      options: {
-        ident: 'postcss'
-      }
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss'
+          }
+        }
+      ]
     }
   ]
   if (env === 'development') {
     return [{
       test: /\.css$/,
-      use: loaders
+      oneOf: loaders
     }]
   } else {
     const extracts = ExtractTextPlugin.extract({

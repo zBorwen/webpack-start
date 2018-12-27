@@ -30,7 +30,11 @@ const webpackProdConf = merge(baseWebpackConf, {
       assetNameRegExp: /\.optimize\.css$/g,
       cssProcessor: require('cssnano'),
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
+        preset: ['default', {
+          discardComments: {
+            removeAll: true
+          }
+        }],
       },
       canPrint: true
     }),
@@ -42,6 +46,7 @@ const webpackProdConf = merge(baseWebpackConf, {
       ]),
     }),
     // js tree-shaking 选择是否需要sourceMap在插入
+    new Webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
