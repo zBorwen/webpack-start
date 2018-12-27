@@ -8,7 +8,7 @@ exports.styleLoaders = function (env) {
       options: {
         minimize: true,
         // 开启css-modules
-        modules: false
+        modules: true
       }
     },
     {
