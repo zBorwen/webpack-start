@@ -46,7 +46,6 @@ const webpackProdConf = merge(baseWebpackConf, {
       ]),
     }),
     // js tree-shaking 选择是否需要sourceMap在插入
-    new Webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
