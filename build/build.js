@@ -17,7 +17,7 @@ if (config.isAnalyzer) {
 webpackProdConf.plugins.push(new Webpack.optimize.UglifyJsPlugin({
   // 删除生产环境的console dubugg语句
   compress: {
-    warnings: false, 
+    warnings: false,
     drop_debugger: true,
     drop_console: true
   },
@@ -26,7 +26,7 @@ webpackProdConf.plugins.push(new Webpack.optimize.UglifyJsPlugin({
   parallel: true,
   // 开启缓存
   cache: true
-}),)
+}), )
 
 // dll renfrence 引用 写多个
 webpackProdConf.plugins.push(

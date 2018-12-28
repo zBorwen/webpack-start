@@ -1,5 +1,5 @@
 <template>
-  <div id="app"></div>
+  <div id="app" :class="$style.red">{{msg}}</div>
 </template>
 
 <script>
@@ -12,8 +12,8 @@ export default {
 }
 </script>
 
-<style scoped>
-#app {
+<style module>
+.red {
   color: red;
 }
 </style>
