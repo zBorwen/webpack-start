@@ -65,7 +65,21 @@ webpack中处理多种文件的机制loader，ES6 module，Babel处理，css预�
 
 很多人肯定刚开始都是在使用官方的脚手架工具，通过一段时间的使用我发现了很多潜在的问题，比如编译有点慢，需要添加一些其它的loader，打包速度能不能快一点，如果我项目现在变成了多入口应该如何调整，甚至要自己写loader与plugin，面对这些问题，有木有很难受。通过手动搭建vue项目去更加的了解webpack的使用以及vue-loader的配置，优化代码提升效率，面对不同的需求更好的去处理。
 
-ES
+
+
+#### 优化
+
+- 打包公共模块
+- 代码分割
+- 提取css
+- tree shaking
+- inline-chunk
+- 平行、缓存、长缓存
+- DllPlugin打包、happypack开启多线程
+- Scope Hoisting
+- 图片压缩、雪碧图合成
+
+
 
 1. 处理ES6，处理预处理语言css
    .browserList .babelrc postcss.conf配置
