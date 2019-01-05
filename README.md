@@ -69,38 +69,61 @@ webpack中处理多种文件的机制loader，ES6 module，Babel处理，css预�
 
 #### 优化
 
-- 打包公共模块
+- 公共模块
+
+  CommonsChunkPlugin
+
 - 代码分割
+
+  magic comment
+
 - 提取css
+
+  extract-text-webpack-plugin
+
 - tree shaking
+
+  purifycss-webpack
+
+  UglifyJsPlugin
+
 - inline-chunk
+
+  html-webpack-inline-chunk-plugin
+
 - 平行、缓存、长缓存
+
+  NamedChunksPlugin
+
+  HashedModuleIdsPlugin
+
 - DllPlugin打包、happypack开启多线程
+
+  DllPlugin
+
+  DllReferencePlugin
+
+  happypack
+
 - Scope Hoisting
+
+  ModuleConcatenationPlugin
+
 - 图片压缩、雪碧图合成
 
 
 
-1. 处理ES6，处理预处理语言css
-   .browserList .babelrc postcss.conf配置
-2. 打包公共模块
+
+
+1. 打包公共模块
    CommonsChunkPlugin [vendor, runtime] 提取js
    公共代码与第三方依赖打包
    区分webpack生成代码与第三方依赖
    多entry
    提取css extract-text-webpack-plugin 提取css
-3. 代码分割 动态import(需要支持promise) [magic chunk] require.ensure第三方依赖分离
-4. Tree Shaking UglifyJsPlugin，PurifyCSSPlugin
-5. postcss处理插件
+2. 代码分割 动态import(需要支持promise) [magic chunk] require.ensure第三方依赖分离
+3. postcss处理插件
    处理图片，字体合成雪碧图
-6. 处理第三方库 providePlugin 三种方式 cdn node_modules import 结合alias
-7. html-webpack-plugin生成html 插入资源
+4. 处理第三方库 providePlugin 三种方式 cdn node_modules import 结合alias
+5. html-webpack-plugin生成html 插入资源
    对图片的处理 image-loader
-8. html-webpack-inline-chunk-plugin 提前加载插入webpack生成代码减少不必要的请求
-9. webpack-dev-server
-   HotModuleReplacementPlugin
-   NoEmitOnErrorsPlugin
-10. 打包优化
-    dll happy-pack 缓存 平行
-11. 打包分析
-    webpack-bundle-analyzer
