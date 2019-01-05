@@ -71,7 +71,119 @@ webpack中处理多种文件的机制loader，ES6 module，Babel处理，css预�
 
 - 公共模块
 
-  CommonsChunkPlugin
+  CommonsChunkPlugin 多`entry` 提取公共代码，第三方依赖，webpack生成代码，异步模块common模块，在vue-cli中的写法可以参考，下面具体介绍一下
+
+  ```js
+  module.exports = {
+      entry: {
+          main: './src/main'
+      },
+      plugins: [
+          // 第三方依赖 minChunks参数做为函数更加的灵活如果没有在entry中设置 vendor 下面的操作会帮助我们将业务代码与第三方依赖分离
+          new Webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks(module) {
+              // any required modules inside node_modules are extracted to vendor
+              return (
+                module.resource &&
+                /\.js$/.test(module.resource) &&
+                module.resource.indexOf(
+                  path.join(__dirname, '../node_modules')
+                ) === 0
+              )
+            }
+          }),
+          // webpack 运行生成代码
+          // 传入 `Infinity` 会马上生成 公共chunk，但里面没有模块。
+          new Webpack.optimize.CommonsChunkPlugin({
+            name: 'runtime',
+            minChunks: Infinity
+          })
+      ]
+  }
+  ```
+
+  ```js
+  module.exports = {
+      entry: {
+          pageA: './src/pageA',
+          pageB: './src/pageB',
+          vendor: ['loadsh']
+      },
+      plugins: [
+          // 1. 多个入口文件可以通过配置chunk指定文件将相同的代码提取出来 如果不指定chunks会报错
+          new webpack.optimize.CommonsChunkPlugin({
+              name: 'common',
+              minChunks: 3,
+              // 指定文件
+              chunks: ['pageA', 'pageB']
+          }),
+          // 2. 第三方依赖代码与公共代码一起打包
+          new webpack.optimize.CommonsChunkPlugin({
+              name: 'vendor',
+              minChunks: Infinity
+          }),
+          // 3. 区分webpack生成的与第三方依赖
+          new webpack.optimize.CommonsChunkPlugin({
+              name: 'runtime',
+              minChunks: Infinity
+          })
+          // 2,3 可以写到一个配置中 通过names配置
+          new webpack.optimize.CommonsChunkPlugin({
+              names: ['vendor', 'runtime'],
+              minChunks: Infinity
+          })
+      ]
+  }
+  ```
+
+  另外的配置 `children` `deepChildren` 表示chunk的子模块是否会被选择， chunk 的后代模块是否会被选择。配合`async` 使用异步加载。假如两个异步加载的模块中有公共的代码模块，打包的时候如果没有设置异步引入的chunkname，异步模块中的公共代码就会被打包进自己的模块中。
+
+  ```js
+  // pageA
+  import utils from './utils'
+  
+  // pageB
+  import utils from './utils'
+  
+  // utils
+  function common() {
+      return 'common'
+  }
+  
+  // main 动态引入
+  import(/*webpackChunkName: "pageA"*/'./pageA')
+  import(/*webpackChunkName: "pageB"*/'./pageB')
+  // 或者 懒加载
+  // require.ensure(['./pageA.js'], function() {
+  //     const pageA = require('./pageB.js')
+  // }, 'pageA')
+  
+  // require.ensure(['./pageB.js'], function() {
+  //     const pageB = require('./pageB.js')
+  // }, 'pageB')
+  ```
+
+  ```js
+  module.exports = {
+      entry: {
+          main: '/src/main'
+      },
+      plugins: [
+          new Webpack.optimize.CommonsChunkPlugin({
+              // name 入口文件名字一致
+              name: 'main',
+              async: 'vendor-async',
+              children: true,
+              minChunks: 3
+          })
+      ]
+  }
+  ```
+
+  如果没有设置children， async对于动态加载的模块与懒加载的模块中的相同代码就会被打包进各自的包，导致重复打包。还有一点需要注意 **对于动态与懒加载的chunk设置chunkName**  避免打包的时候分不清是一个模块。
+
+
 
 - 代码分割
 
