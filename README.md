@@ -181,15 +181,61 @@ webpack中处理多种文件的机制loader，ES6 module，Babel处理，css预�
   }
   ```
 
-  如果没有设置children， async对于动态加载的模块与懒加载的模块中的相同代码就会被打包进各自的包，导致重复打包。还有一点需要注意 **对于动态与懒加载的chunk设置chunkName**  避免打包的时候分不清是一个模块。
+  如果没有设置children， async对于动态加载的模块与懒加载的模块中的相同代码就会被打包进各自的包，导致重复打包。还有一点需要注意 **对于动态与懒加载的chunk设置chunkName**  避免打包的时候分不清是一个模块。webpack4中使用 [*SplitChunksPlugin*](https://webpack.docschina.org/plugins/split-chunks-plugin/) 代替 *CommonChunkPlugin*
 
 
 
-- 代码分割
+- 代码分割、懒加载
 
-  magic comment
+  代码分割的方式有两种，第一个是webpack中特有的 `require.ensure` 以及 动态`import()` 
 
-- 提取css
+  > *tips*: 以上都需要支持 *promise* 如果不支持需要手动加载必要的 *polyfill* 
+
+  分离业务代码与第三方依赖，首次加载与访问后加载
+
+  ```js
+  // 针对不同的条件引入对应的模块
+  if(condition) {
+      require.ensure(['./moduleA'], function() {
+          const moduleA = require('./moduleA')
+      }, 'moduleA')   
+  } else {
+      require.ensure(['./moduleB'], function() {
+          const moduleB = require('./moduleB')
+      }, 'moduleB')
+  }
+  
+  // 分离业务代码与第三方库
+  import Vue from 'vue'
+  import(/*webpackChunkName: lodash*/'lodash').then(() => // 执行...)
+  // 或者
+  require.ensure(['lodash'], function() {
+      const _ = require('lodash')
+      // 执行...
+  }, 'lodash')
+  ```
+
+  *require.ensure* 都可以使用动态 *import* 替换
+
+  ```js
+  // require.include 直接看官网的例子
+  require.include('a');
+  require.ensure(['a', 'b'], function(require) { /* ... */ }, ['a', 'b']);
+  require.ensure(['a', 'c'], function(require) { /* ... */ }, ['a', 'c']);
+  // entry chunk: file.js and a
+  // anonymous chunk: b
+  // anonymous chunk: c
+  ```
+
+  简单的来说其实和提取公共代码类似，在引入的两个模块中都存在相同的模块，那么可以在引用之前通过 *require.include* 以前引入 打包的结果就不会从重复了。
+
+  **对于异步引入的模块提取公共代码在上面已经说过了，这里就跳过了。可以看的出来代码分割和提取公共代码有点傻傻分不清，所以更加需要多去动手实践** 
+
+- 处理css
+
+  `style-loader` 创建style标签
+
+  `css-loader` 在js中可以引入css
 
   extract-text-webpack-plugin
 
@@ -225,17 +271,9 @@ webpack中处理多种文件的机制loader，ES6 module，Babel处理，css预�
 
 
 
-
-
-1. 打包公共模块
-   CommonsChunkPlugin [vendor, runtime] 提取js
-   公共代码与第三方依赖打包
-   区分webpack生成代码与第三方依赖
-   多entry
-   提取css extract-text-webpack-plugin 提取css
-2. 代码分割 动态import(需要支持promise) [magic chunk] require.ensure第三方依赖分离
-3. postcss处理插件
+1. 代码分割 动态import(需要支持promise) [magic chunk] require.ensure第三方依赖分离
+2. postcss处理插件
    处理图片，字体合成雪碧图
-4. 处理第三方库 providePlugin 三种方式 cdn node_modules import 结合alias
-5. html-webpack-plugin生成html 插入资源
+3. 处理第三方库 providePlugin 三种方式 cdn node_modules import 结合alias
+4. html-webpack-plugin生成html 插入资源
    对图片的处理 image-loader
