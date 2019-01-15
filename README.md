@@ -353,7 +353,7 @@ module.exports = {
 
 webpack在打包的过程中会生产*hash*值，在生产环境需要更换成为*chunkhash* 。同时对业务代码，第三方依赖，webpack runtime进行分离，对每一个模块给定一个chunkName，可以通过 `NamedChunksPlugin` 或`HashedModuleIdsPlugin` 引入模块的顺序不同会导致打包的 *chunk* 的 *chunkhash* 发生改变（webpack对每一个chunk随机分配了一个ID）
 
-```
+```js
 module.exports = {
 	output: {
     	filename: 'static/js/[name].[chunkhash:8].js'
@@ -375,24 +375,88 @@ module.exports = {
 
 ##### DllPlugin打包、happypack开启多线程
 
-DllPlugin
+第三方依赖是不会经常改变的，所以在每次打包的是否不需要重复打包，*webpack* 通过`DllPlugin` 拆分 bundles，提升了构建的速度。
 
-DllReferencePlugin
+```js
+// webpack.dll.conf.js
+const path = require('path')
+const Webpack = require('webpack')
+const package = require('../package.json')
 
-happypack
+const dllWebpackConf = {
+  context: path.resolve(__dirname, '../'),
+  entry: {
+    vendor: Object.keys(package.dependencies)
+  },
+  output: {
+    filename: '[name].dll.js',
+    path: path.resolve(__dirname, '../src/dll'),
+    library: '[name]'
+  },
+  plugins: [
+    new Webpack.DllPlugin({
+      path: path.join(__dirname, '../src/dll', '[name]-manifest.json'),
+      name: '[name]'
+    })
+  ]
+}
+
+// webpack.prod.conf.js 多个就写多个对应关系 或者将所有的依赖都可以打进一个vendor，引入一次
+module.exports = {
+    plugins: [
+        new Webpack.DllReferencePlugin({
+            manifest: require('../src/dll/vendor-manifest.json')
+        })
+    ]
+}
+```
+
+在打包优化的过程中还有一个插件 `happypack` 通过单独去开启多个线程解析不同的loader的文件，比如一个去执行 babel的解析，另外一个解析vue的组件。
+
+*waring:* 这个插件并不被广泛的支持，在某些版本的一些loader中，可能会失效或者报错。vue-loader版本过高的情况对应的happypack可能不支持。但是还是需要去介绍一下用法。
+
+```js
+// 将对应的loader进行替换 指定对应的id
+module.exports = {
+    rules: [
+        {
+            test: /\.vue$/,
+            exclude: "/node_modules/",
+            loader: ['happypack/loader?id=vue']
+        },
+        {
+            test: /\.js$/,
+            loader: 'happypack/loader?id=babel',
+            include: [
+                resolve('src')
+            ]
+        }
+    ]
+}
 
 
-
-
-
-
-
-##### 图片处理
-
-
-
-1. postcss处理插件
-   处理图片，字体合成雪碧图
-2. 处理第三方库 providePlugin 三种方式 cdn node_modules import 结合alias
-3. html-webpack-plugin生成html 插入资源
-   对图片的处理 image-loader
+// webpack.prod.conf.js
+const os = require('os')
+const HappyPack = require('happypack')
+// 使用当前线程减1的数量
+const happyThreadPool = HappyPack.ThreadPool({
+  size: os.cpus().length - 1
+});
+module.exports = {
+    plugins: [
+        new HappyPack({
+          id: 'vue',
+          threadPool: happyThreadPool,
+          loaders: [{
+            loader: 'vue-loader',
+            options: vueLoaderConfig
+          }]
+        }),
+        new HappyPack({
+          id: 'babel',
+          threadPool: happyThreadPool,
+          loaders: ['babel-loader?cacheDirectory'],
+        }),
+    ]
+}
+```
