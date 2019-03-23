@@ -2,6 +2,7 @@ const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 
+
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {

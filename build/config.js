@@ -1,6 +1,7 @@
 module.exports = {
   dev: {
     host: 'localhost',
+    port: '8080',
     proxyTable: {},
     publicPath: '/',
     devtool: 'cheap-module-eval-source-map',

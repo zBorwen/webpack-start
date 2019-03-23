@@ -4,6 +4,8 @@ const merge = require('webpack-merge')
 const utils = require('./utils')
 const config = require('./config')
 const BaseWebpackConf = require('./webpack.base.conf')
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 module.exports = (env, argv) => {
   return merge(BaseWebpackConf, {
@@ -12,7 +14,7 @@ module.exports = (env, argv) => {
     },
     devtool: config.dev.devtool,
     devServer: {
-      port: 8000,
+      port: config.dev.port,
       host: config.dev.host,
       historyApiFallback: {
         rewrites: [{
@@ -22,16 +24,33 @@ module.exports = (env, argv) => {
       },
       compress: true,
       overlay: {
-        warning: true
+        warnings: false,
+        errors: true
       },
+      clientLogLevel: 'none',
       hot: true,
       open: true,
       proxy: config.dev.proxyTable,
-      publicPath: config.dev.publicPath
+      publicPath: config.dev.publicPath,
+      quiet: true
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NamedModulesPlugin()
+      new webpack.NamedModulesPlugin(),
+      new FriendlyErrorsPlugin({
+        compilationSuccessInfo: {
+          messages: [`Your application is running here: http://${config.dev.host}:${config.dev.port}`],
+        },
+        onErrors: config.dev.notifyOnErrors ?
+          utils.createNotifierCallback() : undefined
+      }),
+      new StyleLintPlugin({
+        'files': ['**/*.{html,vue,css,scss,sass}'],
+        'fix': true,
+        'cache': false,
+        'emitErrors': true,
+        'failOnError': false
+      })
     ]
   })
 }

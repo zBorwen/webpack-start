@@ -1,21 +1,18 @@
-<template lang='pug'>
-#app(:class='$style.red') {{msg}}
-  <e-header></e-header>
+<template>
+  <div id="app">
+    <Hello></Hello>
+    <Foo></Foo>
+  </div>
 </template>
 
 <script>
+import Hello from './components/Hello'
+import Foo from './components/Foo'
 export default {
-  data() {
-    return {
-      msg: 'hello webpack4'
-    }
+  name: 'app',
+  components: {
+    Hello,
+    Foo
   }
 }
 </script>
-
-<style module>
-/* 666 */
-.red {
-  color: red;
-}
-</style>

@@ -3,6 +3,7 @@ const rm = require('rimraf')
 const Webpack = require('webpack')
 
 const dllWebpackConf = {
+  mode: 'none',
   entry: {
     vendor: ['vue/dist/vue.esm.js']
   },
