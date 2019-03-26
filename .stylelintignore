@@ -7,3 +7,4 @@
 # 测试和打包目录
 /test/
 /dist/
+/coverage/

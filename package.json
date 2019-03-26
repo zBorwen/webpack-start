@@ -1,74 +1,45 @@
 {
-  "name": "webpack4-vue-start",
-  "version": "1.0.0",
-  "description": "webpack4",
-  "main": "index.js",
+  "name": "vue-cli3-template",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --mode=development --progress --config build/webpack.dev.conf.js",
-    "build": "webpack --mode=production --config build/webpack.prod.conf.js",
-    "dll": "webpack --config build/webpack.dll.conf.js",
-    "lint": "eslint --ext .js,.vue src --fix"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "lint:css": "stylelint **/*.{html,vue,css,sass,scss} --fix"
   },
-  "keywords": [
-    "webpack4-practice"
-  ],
-  "author": "hylas",
-  "license": "ISC",
   "dependencies": {
-    "normalize.css": "^8.0.1",
-    "vue": "^2.5.21"
+    "vue": "^2.6.6",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.2.0",
-    "@babel/runtime": "^7.2.0",
-    "babel-loader": "^8.0.4",
-    "css-loader": "^2.0.0",
-    "eslint": "^5.10.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-friendly-formatter": "^4.0.1",
-    "eslint-loader": "^2.1.1",
-    "eslint-plugin-html": "^5.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
-    "file-loader": "^2.0.0",
-    "friendly-errors-webpack-plugin": "^1.7.0",
-    "glob-all": "^3.1.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.5.0",
-    "node-notifier": "^5.4.0",
-    "node-sass": "^4.11.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "postcss": "^7.0.6",
-    "postcss-cssnext": "^3.1.0",
-    "postcss-loader": "^3.0.0",
-    "pug": "^2.0.3",
-    "pug-loader": "^2.4.0",
-    "pug-plain-loader": "^1.0.0",
-    "purify-css": "^1.2.5",
-    "purifycss-webpack": "^0.7.0",
-    "raw-loader": "^1.0.0",
-    "rimraf": "^2.6.2",
+    "fibers": "^3.1.1",
+    "lint-staged": "^8.1.4",
+    "sass": "^1.17.2",
     "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
     "stylelint": "^9.10.1",
     "stylelint-config-recess-order": "^2.0.1",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-order": "^2.1.0",
     "stylelint-scss": "^3.5.4",
     "stylelint-webpack-plugin": "^0.10.5",
-    "uglifyjs-webpack-plugin": "^2.0.1",
-    "url-loader": "^1.1.2",
-    "vue-loader": "^15.4.2",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.21",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
-    "webpack-merge": "^4.1.5"
+    "vue-template-compiler": "^2.5.21"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
