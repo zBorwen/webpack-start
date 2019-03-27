@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import actions from './actions'
-import mutations from './mutations'
+import {
+  ROOT_MUTATIONS
+} from './mutations'
 import moduleA from './modules/moduleA'
 
 Vue.use(Vuex)
@@ -13,7 +15,7 @@ export default new Vuex.Store({
   modules: {
     moduleA
   },
-  mutations,
+  mutations: ROOT_MUTATIONS,
   actions,
   getters: {
     getCount(state) {
