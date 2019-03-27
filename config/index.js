@@ -9,7 +9,6 @@ module.exports = {
     env: {
       TYPE: JSON.stringify('dev'),
       // 使用JSON.stringify处理对象（拷贝） BASE_URL: '/vue'在merge时会把 /vue看成一个变量去读取 发生报错
-      // BASE_URL: '"/vue"',
       ...com
     }
   },
