@@ -1,17 +1,22 @@
 const merge = require('webpack-merge')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const configs = require('./config')
+const utils = require('./build/utils')
 const cfg = process.env.NODE_ENV === 'development' ? configs.dev.env : configs.build.env
 
 module.exports = {
-  publicPath: 'vue',
-  pages: {
-    index: {
-      entry: 'src/pages/demo/main.js',
-      template: 'public/index.html',
-      filename: 'index.html',
-      title: 'demo',
-      chunks: ['chunk-vendors', 'chunk-common', 'index']
+  // publicPath: 'vue',
+  pages: utils.setPages(),
+  configureWebpack: config => {
+    const stylintPlugin = new StyleLintPlugin({
+      'files': ['**/*.{html,vue,css,sass,scss}'],
+      'fix': true,
+      'cache': false,
+      'emitErrors': true,
+      'failOnError': false
+    })
+    return {
+      plugins: [stylintPlugin]
     }
   },
   chainWebpack: config => {
@@ -22,16 +27,5 @@ module.exports = {
         args[0][name] = merge(args[0][name], cfg)
         return args
       })
-  },
-  configureWebpack: {
-    plugins: [
-      new StyleLintPlugin({
-        'files': ['**/*.{html,vue,css,sass,scss}'],
-        'fix': true,
-        'cache': false,
-        'emitErrors': true,
-        'failOnError': false
-      })
-    ]
   }
 }

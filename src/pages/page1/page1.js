@@ -4,7 +4,6 @@ import router from './router'
 import store from '@/store'
 
 Vue.config.productionTip = false
-console.log(process.env.BASE_URL)
 new Vue({
   router,
   store,
