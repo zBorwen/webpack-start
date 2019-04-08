@@ -5,7 +5,7 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: '/page2/',
+  base: process.env.BASE_URL + 'page2',
   routes: [{
     path: '/',
     name: 'home',

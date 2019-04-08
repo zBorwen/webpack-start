@@ -18,8 +18,8 @@ exports.setPages = configs => {
 
     let conf = {
       entry: pfp,
-      template: tmp + '.html', // 模板路径
-      filename: filename + '.html', // 生成 html 的文件名
+      template: `${tmp}/${filename}.html`, // 模板路径
+      filename: filename, // 生成 html 的文件名
       chunks: ['chunk-vendors', 'chunk-common', filename],
       title: filename,
       inject: true

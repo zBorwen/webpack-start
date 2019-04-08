@@ -5,7 +5,7 @@ const utils = require('./build/utils')
 const cfg = process.env.NODE_ENV === 'development' ? configs.dev.env : configs.build.env
 
 module.exports = {
-  // publicPath: 'vue',
+  publicPath: 'vue',
   pages: utils.setPages(),
   configureWebpack: config => {
     const stylintPlugin = new StyleLintPlugin({
