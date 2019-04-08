@@ -43,6 +43,7 @@ exports.setPages = configs => {
       })
     }
     cfp[filename] = conf
+
     return cfp
   }, {})
 }
